@@ -17,3 +17,8 @@
 //! Rust will convert it to a `&str` when you need it.
 //! This is thanks to a trait called `Deref`.
 //! You can pass in a `&String` to a function that takes a `&str`.
+
+//! This is simple function that takes a `&str` and prints it
+pub fn prints_str(my_str: &str) {
+    println!("{my_str}");
+}
