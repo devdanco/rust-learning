@@ -118,3 +118,40 @@ struct User<'a> {
 }
 ```
 This means: The `User` struct has a lifetime `'a`, and name must live at least as long as `'a`.
+
+
+## The anonymous lifetime
+When we have a struct like `User` we can implement `Display` trait for it
+```rust
+impl fmt::Display for User {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    write!(f, "My name is {}.", self.name)
+  }
+}
+```
+input to formater is as follows
+```rust
+f: &mut fmt::Formatter<'_>
+```
+and it has something which is called `anonymous lifetime specifier` `<'_>`. 
+It is an indicator that references are being used
+```rust
+struct User<'a> {
+  name: &'a str
+}
+    
+impl User<'_> {
+  fn print_name(&self) {
+    println!("{}", self.name);
+  }
+}
+    
+impl Display for User<'_> {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    write!(f, "{}", self.name)
+  }
+}
+    
+let user = User { name: "John" };
+user.print_name();
+```
