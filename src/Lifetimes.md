@@ -81,3 +81,40 @@ fn returns_str() -> &'static str {
 }
 ```
 This tells Rust the function will only return a string literal (`str` with lifetime specifier `'static`) that lives forever.
+
+## Lifetime Annotations in Types
+
+- **Creating a Struct with a Reference Field**:
+    - Imagine we want to create a `User` struct with a `name` field of type `&str`.
+```rust
+#[derive(Debug)]
+struct User {
+    name: &str
+}
+```
+- The compiler will give an error: `missing lifetime specifier`.
+#### Why Does This Happen?
+- Rust needs a lifetime for `&str` because `&str` is a reference.
+- If the value that `name` points to is dropped, the reference could point to invalid data.
+- This is unsafe, so Rust prevents it.
+
+#### Using 'static Lifetime:
+- You can make the field `&'static str` to avoid the error.
+```rust
+#[derive(Debug)]
+struct User {
+    name: &'static str
+}
+```
+This compiles but limits the name to string literals only.
+
+#### Adding a Lifetime Specifier
+- To fix this, we give the `User` struct and `&str` a lifetime specifier.
+- This means `User` will only accept a reference for `name` if it lives as long as `User`.
+```rust
+#[derive(Debug)]
+struct User<'a> {
+    name: &'a str
+}
+```
+This means: The `User` struct has a lifetime `'a`, and name must live at least as long as `'a`.
